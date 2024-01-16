@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1> Customer Record: </h1>
+
+    <div class="card text-center">
+        <div class="card-header">
+            {{ customer_record.first_name }} {{ customer_record.last_name }}
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">
+            Email: {{ customer_record.email }} <br>
+            Phone: {{ customer_record.phone }} <br>
+            Address:{{ customer_record.address }}
+            {{ customer_record.city }}
+            {{ customer_record.state }}
+            {{ customer_record.zipcode }}
+          </h5>
+        </div>
+        <div class="card-footer text-body-secondary">
+          Created: {{ customer_record.created_at }}
+        </div>
+      </div>
+
+{% endblock %}
