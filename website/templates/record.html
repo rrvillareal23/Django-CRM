@@ -5,13 +5,13 @@
 
     <div class="card text-center">
         <div class="card-header">
-            {{ customer_record.first_name }} {{ customer_record.last_name }}
+            <h2>{{ customer_record.first_name }} {{ customer_record.last_name }} </h2>
         </div>
         <div class="card-body">
           <h5 class="card-title">
-            Email: {{ customer_record.email }} <br>
-            Phone: {{ customer_record.phone }} <br>
-            Address:{{ customer_record.address }}
+            <strong> Email: </strong> {{ customer_record.email }} <br>
+            <strong> Phone: </strong> {{ customer_record.phone }} <br>
+            <strong> Address:</strong> {{ customer_record.address }}
             {{ customer_record.city }}
             {{ customer_record.state }}
             {{ customer_record.zipcode }}
@@ -21,5 +21,9 @@
           Created: {{ customer_record.created_at }}
         </div>
       </div>
+      <br>
+      <a href="{% url 'home' %}" class ="btn btn-secondary">Back</a>
+      <a href="{% url 'home' %}" class ="btn btn-danger">Delete</a>
+
 
 {% endblock %}
