@@ -2,14 +2,19 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm, AddRecordForm
-from .models import Record
+from .models import Record, Installer
 
 #login info
 #admin
 #password
 
+#NonStaff Login
+#Tester
+#testing123!
+
 def home(request):
     records = Record.objects.all()
+    installers = Installer.objects.all()
     
     #check to see if loggin in
     if request.method == "POST":
@@ -26,7 +31,7 @@ def home(request):
             messages.success(request, "Error logging in, please try again...")
             return redirect('home')
     else:
-        return render(request, 'home.html', {'records':records})
+        return render(request, 'home.html', {'records':records, 'installers':installers})
     
 
 def logout_user(request):

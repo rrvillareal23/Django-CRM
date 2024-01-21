@@ -1,5 +1,15 @@
 from django.db import models
 
+PROJECT_STATUS = [
+    ('Waiting on Survey', 'WAITING ON SURVEY'),
+    ('Waiting on Tou', 'WAITING ON TOU'),
+    ('Waiting on Deposit', 'WAITING ON DEPOSIT'),
+    ('Waiting on Installer', 'WAITING ON INSTALLER'),
+    ('Waiting on Customer', 'WAITING ON CUSTOMER'),
+    ('Waiting on Install Date', 'WAITING ON INSTALL DATE'),
+    ('Install Completed', 'INSTALL COMPLETED'),
+]
+
 class Record(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length = 50)
@@ -10,6 +20,22 @@ class Record(models.Model):
     city = models.CharField(max_length = 50)
     state = models.CharField(max_length = 25)
     zipcode = models.CharField(max_length = 10)
+    installer_name = models.CharField(max_length = 50, default = 'No Installer Yet')
+    project_status = models.CharField(max_length = 50, choices=PROJECT_STATUS, default = 'Waiting on Survey')
     
     def __str__(self):
         return (f"{self.first_name} {self.last_name}")
+    
+class Installer(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True)
+    company_name = models.CharField(max_length = 50)
+    email = models.CharField(max_length = 75)
+    phone = models.CharField(max_length = 12)
+    address = models.CharField(max_length = 100)
+    city = models.CharField(max_length = 50)
+    state = models.CharField(max_length = 25)
+    zipcode = models.CharField(max_length = 10)
+    license_number = models.CharField(max_length = 50, default = 'Still Need!')
+    
+    def __str__(self):
+        return (f"{self.company_name}")
