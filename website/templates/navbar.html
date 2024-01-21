@@ -12,6 +12,13 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'add_record' %}">Add Record</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'customer' %}">Customer</a>
+            </li>
+
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'installer_dashboard' %}">Installer</a>
+            </li>
 
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logout' %}">Logout</a>
@@ -24,6 +31,7 @@
             <li class="nav-item">
               <a class="nav-link" href="{% url 'register' %}">Register</a>
             </li>
+            
           {% endif %}
         </ul>
       </div>

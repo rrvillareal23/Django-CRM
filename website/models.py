@@ -10,6 +10,16 @@ PROJECT_STATUS = [
     ('Install Completed', 'INSTALL COMPLETED'),
 ]
 
+PROJECT_TIERS = [
+    ('Custom', 'CUSTOM'),
+    ('Tier 1', 'TIER 1'),
+    ('Tier 2', 'TIER 2'),
+    ('Tier 3', 'TIER 3'),
+    ('Tier 4', 'TIER 4'),
+    ('Tier 5', 'TIER 5'),
+
+]
+
 class Record(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     first_name = models.CharField(max_length = 50)
@@ -22,6 +32,7 @@ class Record(models.Model):
     zipcode = models.CharField(max_length = 10)
     installer_name = models.CharField(max_length = 50, default = 'No Installer Yet')
     project_status = models.CharField(max_length = 50, choices=PROJECT_STATUS, default = 'Waiting on Survey')
+    project_tier = models.CharField(max_length = 50, choices=PROJECT_TIERS, default = '')
     
     def __str__(self):
         return (f"{self.first_name} {self.last_name}")

@@ -26,11 +26,18 @@ def home(request):
             messages.success(request, "You have been logged in!", extra_tags='success')
             return redirect('home')
         else:
-            messages.warning(request, "Error logging in, please try again...", extra_tags="warning")
+            messages.warning(request, "Error logging in, please try again...", extra_tags="danger")
             return redirect('home')
     else:
         return render(request, 'home.html', {'records':records, 'installers':installers})
-        
+
+def customer(request):
+    return render(request,'customer.html')
+
+def installer_dashboard(request):
+    return render(request,'installer_dashboard.html')
+
+    
 
 def logout_user(request):
     logout(request)
@@ -104,3 +111,4 @@ def update_record(request, pk):
     else:
         messages.success(request, "You must be logged in to Delete a Record!", extra_tags='warning')
         return redirect('home')
+    

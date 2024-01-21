@@ -20,6 +20,7 @@
           <th scope="col">Zipcode</th>
           <th scope="col">Create At</th>
           <th scope="col">Installer</th>
+          <th scope="col">Tier</th>
           <th scope="col">Status</th>
 
           <th scope="col">ID</th>
@@ -38,6 +39,7 @@
             <td>{{ record.zipcode }}</td>
             <td>{{ record.created_at }}</td>
             <td>{{ record.installer_name }}</td>
+            <td>{{ record.project_tier }}</td>
             <td>{{ record.project_status }}</td>
 
             <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
