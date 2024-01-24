@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm, AddRecordForm
 from .models import Record, Installer
+from .filters import OrderFilter
 
 from .decorators import allowed_user
 
@@ -14,6 +15,34 @@ def home(request):
     records = Record.objects.all()
     installers = Installer.objects.all()
     
+    myFilter = OrderFilter(request.GET, queryset=records)
+    records = myFilter.qs
+    
+    waiting_on_tou = records.filter(project_status='Waiting on Tou').count()
+    waiting_on_survey = records.filter(project_status='Waiting on Survey').count()
+    waiting_on_deposit = records.filter(project_status='Waiting on Deposit').count()
+    waiting_on_installer = records.filter(project_status='Waiting on Installer').count()
+    waiting_on_customer = records.filter(project_status='Waiting on Customer').count()
+    waiting_on_appointment = records.filter(project_status='Waiting on Appointment').count()
+    waiting_on_permit = records.filter(project_status='Waiting on Permit').count()
+    waiting_on_install = records.filter(project_status='Waiting on Install').count()
+    install_completed = records.filter(project_status='Install Completed').count()
+
+    context = {
+        'records': records, 
+        'installers': installers,
+        'waiting_on_tou': waiting_on_tou,
+        'waiting_on_survey': waiting_on_survey,
+        'waiting_on_deposit': waiting_on_deposit,
+        'waiting_on_installer': waiting_on_installer,
+        'waiting_on_customer': waiting_on_customer,
+        'waiting_on_appointment': waiting_on_appointment,
+        'waiting_on_permit': waiting_on_permit,
+        'waiting_on_install': waiting_on_install,
+        'install_completed': install_completed,
+        'myFilter': myFilter
+    }
+                
     #check to see if loggin in
     if request.method == "POST":
         username = request.POST['username']
@@ -29,15 +58,11 @@ def home(request):
             messages.warning(request, "Error logging in, please try again...", extra_tags="danger")
             return redirect('home')
     else:
-        return render(request, 'home.html', {'records':records, 'installers':installers})
-
-def customer(request):
-    return render(request,'customer.html')
+        return render(request, 'home.html', context)
 
 def installer_dashboard(request):
     return render(request,'installer_dashboard.html')
 
-    
 
 def logout_user(request):
     logout(request)

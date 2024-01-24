@@ -1,112 +1,147 @@
 {% extends "base.html" %}
 
-{%block content%}
+{% block content %}
+
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Waiting on TOU</h5>
+			<hr>
+      {{ waiting_on_tou }}
+
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Waiting on Survey</h5>
+			<hr>
+      {{ waiting_on_survey }}
 
 
-    {% if user.is_authenticated %}
+		</div>
+	</div>
 
-    <h1>Customers</h1>
-    <br>
+  <div class="col-md">
+		<div class="card card-body">
+			<h5>Waiting on Deposit</h5>
+			<hr>
+      
+      {{ waiting_on_deposit }}
 
-    <table class="table table-striped table-hover table-bordered table-sm">
-      <thead class = "table-dark">
-        <tr>
-          <th scope="col">Name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Phone</th>
-          <th scope="col">Address</th>
-          <th scope="col">City</th>
-          <th scope="col">State</th>
-          <th scope="col">Zipcode</th>
-          <th scope="col">Create At</th>
-          <th scope="col">Installer</th>
-          <th scope="col">Tier</th>
-          <th scope="col">Status</th>
+		</div>
+	</div>
 
-          <th scope="col">ID</th>
-        </tr>
-      </thead>
-      <tbody>
+  <div class="col-md">
+		<div class="card card-body">
+			<h5>Waiting on Installer</h5>
+			<hr>
+      {{ waiting_on_installer }}
+
+		</div>
+	</div>
+
+	<div class="col-md">
+		<div class="card card-body">
+			<h5>Waiting on Customer</h5>
+			<hr>
+      {{ waiting_on_customer }}
+
+		</div>
+	</div>
+
+  <div class="col-md">
+		<div class="card card-body">
+			<h5>Waiting on Appointment</h5>
+			<hr>
+      {{ waiting_on_appointment }}
+
+		</div>
+	</div>
+
+  <div class="col-md">
+		<div class="card card-body">
+			<h5>Waiting on Permit</h5>
+			<hr>
+      {{ waiting_on_permit }}
+
+		</div>
+	</div>
+
+  <div class="col-md">
+		<div class="card card-body">
+			<h5>Waiting on Install</h5>
+			<hr>
+      {{ waiting_on_install }}
+
+		</div>
+	</div>
+
+  <div class="col-md">
+		<div class="card card-body">
+			<h5> Install Completed</h5>
+			<hr>
+      {{ install_completed }}
+
+		</div>
+	</div>
+
+</div>
+
+
+<br>
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+
+			<form method="get">
+        {{ myFilter.form }}
+
+		    <button class="btn btn-primary" type="submit">Search</button>
+		  </form>
+		</div>
+	</div>
+	
+</div>
+<br>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+			<table class="table table-sm">
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+          <th>Phone</th>
+					<th>Status</th>
+					<th>Installer</th>
+					<th>Tier</th>
+					<th>Project ID</th>
+				</tr>
+
+				<tbody>
           {% if records %}
           {% for record in records %}
           <tr>
             <td>{{ record.first_name }} {{ record.last_name }}</td>
             <td>{{ record.email }}</td>
             <td>{{ record.phone }}</td>
-            <td>{{ record.address }}</td>
-            <td>{{ record.city }}</td>
-            <td>{{ record.state }}</td>
-            <td>{{ record.zipcode }}</td>
-            <td>{{ record.created_at }}</td>
-            <td>{{ record.installer_name }}</td>
-            <td>{{ record.project_tier }}</td>
             <td>{{ record.project_status }}</td>
-
+            <td>{{ record.installer_name }}</td>
+            <td>{{ record.project_tier }}</td>          
             <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
 
           </tr>
     
           {% endfor %}
-        {% endif %}
-      </tbody>
-    </table>
+          {% endif %}
+          </tbody>
 
-    <h1>Installers</h1>
-    <table class="table table-striped table-hover table-bordered table-sm">
-      <thead class = "table-dark">
-        <tr>
-          <th scope="col">Company Name</th>
-          <th scope="col">Email</th>
-          <th scope="col">Phone</th>
-          <th scope="col">Address</th>
-          <th scope="col">City</th>
-          <th scope="col">State</th>
-          <th scope="col">Zipcode</th>
-          <th scope="col">License #</th>
-          <th scope="col">ID</th>
-        </tr>
-      </thead>
-      <tbody>
-          {% if installers %}
-          {% for installer in installers %}
-          <tr>
-            <td>{{ installer.company_name }}</td>
-            <td>{{ installer.email }}</td>
-            <td>{{ installer.phone }}</td>
-            <td>{{ installer.address }}</td>
-            <td>{{ installer.city }}</td>
-            <td>{{ installer.state }}</td>
-            <td>{{ installer.zipcode }}</td>
-            <td>{{ installer.license_number }}</td>
-            <td>{{ installer.id }}</td>
+			</table>
+		</div>
+	</div>
+</div>
 
-
-
-          </tr>
-    
-          {% endfor %}
-        {% endif %}
-      </tbody>
-    </table>
-
-    {% else %}
-    <div class = "col-md-6 offset-md-3">
-
-      <h1>Login</h1>
-      <br>
-      <form method="POST" action={% url 'home' %}>
-        {% csrf_token %}
-        
-            <div class="mb-3">
-              <input type="text" class="form-control" name="username" placeholder="Username" required>
-            </div>
-            <div class="mb-3">
-              <input type="password" class="form-control" name="password" placeholder="Password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-
-        </form>
-    </div>
-{% endif %}
-
-{%endblock%}
+{% endblock %}

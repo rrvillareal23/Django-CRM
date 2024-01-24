@@ -1,12 +1,14 @@
 from django.db import models
 
 PROJECT_STATUS = [
-    ('Waiting on Survey', 'WAITING ON SURVEY'),
     ('Waiting on Tou', 'WAITING ON TOU'),
+    ('Waiting on Survey', 'WAITING ON SURVEY'),
     ('Waiting on Deposit', 'WAITING ON DEPOSIT'),
     ('Waiting on Installer', 'WAITING ON INSTALLER'),
     ('Waiting on Customer', 'WAITING ON CUSTOMER'),
-    ('Waiting on Install Date', 'WAITING ON INSTALL DATE'),
+    ('Waiting on Appointment', 'WAITING ON APPOINTMENT'),
+    ('Waiting on Permit', 'WAITING ON PERMIT'),
+    ('Waiting on Install', 'WAITING ON INSTALL'),
     ('Install Completed', 'INSTALL COMPLETED'),
 ]
 
