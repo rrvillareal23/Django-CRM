@@ -1,6 +1,43 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    /* Add your custom styles here */
+
+    .row {
+        margin-bottom: 20px;
+    }
+
+    .card {
+        border: 1px solid #ddd; /* Add a border for better separation */
+        border-radius: 8px; /* Optional: Add rounded corners */
+    }
+
+    .card-body {
+        padding: 15px;
+    }
+
+    table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+    a {
+        text-decoration: none;
+        color: #007bff;
+    }
+</style>
 
 <div class="row">
     {% for status, content in status_content_pairs %}
@@ -21,19 +58,16 @@
         <div class="card card-body">
             <table class="table table-sm">
                 <thead>
-					<tr>
-						<th><a href="?sort_by=first_name{% if sort_by == 'first_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Name</a></th>
-						<th><a href="?sort_by=email{% if sort_by == 'email' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Email</a></th>
-						<th><a href="?sort_by=phone{% if sort_by == 'phone' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Phone</a></th>
-						<th><a href="?sort_by=project_status{% if sort_by == 'project_status' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Status</a></th>
-						<th><a href="?sort_by=installer_name{% if sort_by == 'installer_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer</a></th>
-						<th><a href="?sort_by=project_tier{% if sort_by == 'project_tier' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Tier</a></th>
-						<th><a href="?sort_by=id{% if sort_by == 'id' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Project ID</a></th>
-					</tr>
-				</thead>
-				
-				
-										
+                    <tr>
+                        <th><a href="?sort_by=first_name{% if sort_by == 'first_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Name</a></th>
+                        <th><a href="?sort_by=email{% if sort_by == 'email' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Email</a></th>
+                        <th><a href="?sort_by=phone{% if sort_by == 'phone' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Phone</a></th>
+                        <th><a href="?sort_by=project_status{% if sort_by == 'project_status' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Status</a></th>
+                        <th><a href="?sort_by=installer_name{% if sort_by == 'installer_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer</a></th>
+                        <th><a href="?sort_by=project_tier{% if sort_by == 'project_tier' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Tier</a></th>
+                        <th><a href="?sort_by=id{% if sort_by == 'id' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Project ID</a></th>
+                    </tr>
+                </thead>
                 <tbody>
                     {% if records %}
                         {% for record in records %}
@@ -53,6 +87,4 @@
         </div>
     </div>
 </div>
-
-
 {% endblock %}

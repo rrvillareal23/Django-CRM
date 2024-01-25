@@ -3,10 +3,10 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm, AddRecordForm
 from .models import Record, Installer
+from .decorators import allowed_user
 
 from django.db.models import Q
 
-from .decorators import allowed_user
 
 #login info     Employee Login        Insatller         Admin
 #admin          Tester                Trout             TestAdmin
@@ -15,7 +15,7 @@ from .decorators import allowed_user
 def home(request):
     q = request.GET.get('q', '')
     installers = Installer.objects.all()
-   
+
     if q:
         # Check if the query is a number
         if q.isdigit():
@@ -27,15 +27,19 @@ def home(request):
             # Check if there are two words in the query
             if len(words) == 2:
                 first_name, last_name = words
-                records = Record.objects.filter(Q(first_name__icontains=first_name) & Q(last_name__icontains=last_name))
+                records = Record.objects.filter(first_name__iexact=first_name, last_name__iexact=last_name)
             else:
                 records = Record.objects.filter(Q(first_name__icontains=q) | Q(last_name__icontains=q))
     else:
         records = Record.objects.all()
 
     sort_by = request.GET.get('sort_by', 'id')  # Default to sorting by ID
-    records = records.order_by(sort_by)
+    sort_order = request.GET.get('sort_order', 'asc')  # Default to ascending order
 
+    if sort_order == 'desc':
+        sort_by = f"-{sort_by}"  # Prefix with "-" for descending order
+
+    records = records.order_by(sort_by)
 
     waiting_on_tou = records.filter(project_status='Waiting on Tou').count()
     waiting_on_survey = records.filter(project_status='Waiting on Survey').count()
@@ -46,7 +50,7 @@ def home(request):
     waiting_on_permit = records.filter(project_status='Waiting on Permit').count()
     waiting_on_install = records.filter(project_status='Waiting on Install').count()
     install_completed = records.filter(project_status='Install Completed').count()
-    
+
     status_content_pairs = [
         ('Waiting on TOUs', waiting_on_tou),
         ('Waiting on Survey', waiting_on_survey),
@@ -59,9 +63,8 @@ def home(request):
         ('Install Completed', install_completed),
     ]
 
-
     context = {
-        'records': records, 
+        'records': records,
         'installers': installers,
         'waiting_on_tou': waiting_on_tou,
         'waiting_on_survey': waiting_on_survey,
@@ -75,7 +78,7 @@ def home(request):
         'status_content_pairs': status_content_pairs,
         'search_query': q,  # Include search query in the context
         'sort_by': sort_by,
-
+        'sort_order': sort_order,  # Include sort order in the context
     }
                 
     #check to see if loggin in
