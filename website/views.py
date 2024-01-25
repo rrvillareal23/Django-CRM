@@ -3,7 +3,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import SignUpForm, AddRecordForm
 from .models import Record, Installer
-from .filters import OrderFilter
+
+from django.db.models import Q
 
 from .decorators import allowed_user
 
@@ -12,12 +13,30 @@ from .decorators import allowed_user
 #password       testing123!           Zxcvbnm,./        Zxcvbnm,./
 
 def home(request):
-    records = Record.objects.all()
+    q = request.GET.get('q', '')
     installers = Installer.objects.all()
-    
-    myFilter = OrderFilter(request.GET, queryset=records)
-    records = myFilter.qs
-    
+   
+    if q:
+        # Check if the query is a number
+        if q.isdigit():
+            records = Record.objects.filter(id=q)
+        else:
+            # Split the query into words
+            words = q.split()
+
+            # Check if there are two words in the query
+            if len(words) == 2:
+                first_name, last_name = words
+                records = Record.objects.filter(Q(first_name__icontains=first_name) & Q(last_name__icontains=last_name))
+            else:
+                records = Record.objects.filter(Q(first_name__icontains=q) | Q(last_name__icontains=q))
+    else:
+        records = Record.objects.all()
+
+    sort_by = request.GET.get('sort_by', 'id')  # Default to sorting by ID
+    records = records.order_by(sort_by)
+
+
     waiting_on_tou = records.filter(project_status='Waiting on Tou').count()
     waiting_on_survey = records.filter(project_status='Waiting on Survey').count()
     waiting_on_deposit = records.filter(project_status='Waiting on Deposit').count()
@@ -27,6 +46,19 @@ def home(request):
     waiting_on_permit = records.filter(project_status='Waiting on Permit').count()
     waiting_on_install = records.filter(project_status='Waiting on Install').count()
     install_completed = records.filter(project_status='Install Completed').count()
+    
+    status_content_pairs = [
+        ('Waiting on TOUs', waiting_on_tou),
+        ('Waiting on Survey', waiting_on_survey),
+        ('Waiting on Deposit', waiting_on_deposit),
+        ('Waiting on Installer', waiting_on_installer),
+        ('Waiting on Customer', waiting_on_customer),
+        ('Waiting on Appointment', waiting_on_appointment),
+        ('Waiting on Permit', waiting_on_permit),
+        ('Waiting on Install', waiting_on_install),
+        ('Install Completed', install_completed),
+    ]
+
 
     context = {
         'records': records, 
@@ -40,7 +72,10 @@ def home(request):
         'waiting_on_permit': waiting_on_permit,
         'waiting_on_install': waiting_on_install,
         'install_completed': install_completed,
-        'myFilter': myFilter
+        'status_content_pairs': status_content_pairs,
+        'search_query': q,  # Include search query in the context
+        'sort_by': sort_by,
+
     }
                 
     #check to see if loggin in

@@ -2,146 +2,57 @@
 
 {% block content %}
 
+<div class="row">
+    {% for status, content in status_content_pairs %}
+        <div class="col-md">
+            <div class="card card-body">
+                <h5>{{ status }}</h5>
+                <hr>
+                {{ content }}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
 <br>
 
 <div class="row">
-	<div class="col-md">
-		<div class="card card-body">
-			<h5>Waiting on TOU</h5>
-			<hr>
-      {{ waiting_on_tou }}
-
-		</div>
-	</div>
-
-	<div class="col-md">
-		<div class="card card-body">
-			<h5>Waiting on Survey</h5>
-			<hr>
-      {{ waiting_on_survey }}
-
-
-		</div>
-	</div>
-
-  <div class="col-md">
-		<div class="card card-body">
-			<h5>Waiting on Deposit</h5>
-			<hr>
-      
-      {{ waiting_on_deposit }}
-
-		</div>
-	</div>
-
-  <div class="col-md">
-		<div class="card card-body">
-			<h5>Waiting on Installer</h5>
-			<hr>
-      {{ waiting_on_installer }}
-
-		</div>
-	</div>
-
-	<div class="col-md">
-		<div class="card card-body">
-			<h5>Waiting on Customer</h5>
-			<hr>
-      {{ waiting_on_customer }}
-
-		</div>
-	</div>
-
-  <div class="col-md">
-		<div class="card card-body">
-			<h5>Waiting on Appointment</h5>
-			<hr>
-      {{ waiting_on_appointment }}
-
-		</div>
-	</div>
-
-  <div class="col-md">
-		<div class="card card-body">
-			<h5>Waiting on Permit</h5>
-			<hr>
-      {{ waiting_on_permit }}
-
-		</div>
-	</div>
-
-  <div class="col-md">
-		<div class="card card-body">
-			<h5>Waiting on Install</h5>
-			<hr>
-      {{ waiting_on_install }}
-
-		</div>
-	</div>
-
-  <div class="col-md">
-		<div class="card card-body">
-			<h5> Install Completed</h5>
-			<hr>
-      {{ install_completed }}
-
-		</div>
-	</div>
-
+    <div class="col-md">
+        <div class="card card-body">
+            <table class="table table-sm">
+                <thead>
+					<tr>
+						<th><a href="?sort_by=first_name{% if sort_by == 'first_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Name</a></th>
+						<th><a href="?sort_by=email{% if sort_by == 'email' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Email</a></th>
+						<th><a href="?sort_by=phone{% if sort_by == 'phone' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Phone</a></th>
+						<th><a href="?sort_by=project_status{% if sort_by == 'project_status' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Status</a></th>
+						<th><a href="?sort_by=installer_name{% if sort_by == 'installer_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer</a></th>
+						<th><a href="?sort_by=project_tier{% if sort_by == 'project_tier' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Tier</a></th>
+						<th><a href="?sort_by=id{% if sort_by == 'id' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Project ID</a></th>
+					</tr>
+				</thead>
+				
+				
+										
+                <tbody>
+                    {% if records %}
+                        {% for record in records %}
+                            <tr>
+                                <td>{{ record.first_name }} {{ record.last_name }}</td>
+                                <td>{{ record.email }}</td>
+                                <td>{{ record.phone }}</td>
+                                <td>{{ record.project_status }}</td>
+                                <td>{{ record.installer_name }}</td>
+                                <td>{{ record.project_tier }}</td>          
+                                <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-
-<br>
-<div class="row">
-	<div class="col">
-		<div class="card card-body">
-
-			<form method="get">
-        {{ myFilter.form }}
-
-		    <button class="btn btn-primary" type="submit">Search</button>
-		  </form>
-		</div>
-	</div>
-	
-</div>
-<br>
-
-<div class="row">
-	<div class="col-md">
-		<div class="card card-body">
-			<table class="table table-sm">
-				<tr>
-					<th>Name</th>
-					<th>Email</th>
-          <th>Phone</th>
-					<th>Status</th>
-					<th>Installer</th>
-					<th>Tier</th>
-					<th>Project ID</th>
-				</tr>
-
-				<tbody>
-          {% if records %}
-          {% for record in records %}
-          <tr>
-            <td>{{ record.first_name }} {{ record.last_name }}</td>
-            <td>{{ record.email }}</td>
-            <td>{{ record.phone }}</td>
-            <td>{{ record.project_status }}</td>
-            <td>{{ record.installer_name }}</td>
-            <td>{{ record.project_tier }}</td>          
-            <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
-
-          </tr>
-    
-          {% endfor %}
-          {% endif %}
-          </tbody>
-
-			</table>
-		</div>
-	</div>
-</div>
 
 {% endblock %}
