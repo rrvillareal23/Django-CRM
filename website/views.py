@@ -1,9 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import SignUpForm, AddRecordForm
-from .models import Record, Installer
+from .forms import SignUpForm, AddRecordForm, RecordNoteForm
+from .models import Record, Installer, RecordNote
 from .decorators import allowed_user
+from django.urls import reverse
+
 
 from django.db.models import Q
 
@@ -128,12 +130,40 @@ def register_user(request):
 
 def customer_record(request, pk):
     if request.user.is_authenticated:
-        #Look up record
-        customer_record = Record.objects.get(id=pk)
-        return render(request, 'record.html', {'customer_record': customer_record})
+        customer_record = get_object_or_404(Record, id=pk)
+        record_notes = RecordNote.objects.filter(record=customer_record)
+        return render(request, 'record.html', {'customer_record': customer_record, 'record_notes': record_notes})
     else:
         messages.success(request, "You must be logged in to see that record!", extra_tags='success')
         return redirect('home')
+    
+@allowed_user(allowed_roles=['Admin'])
+def add_note(request, pk):
+    record = get_object_or_404(Record, id=pk)
+
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = RecordNoteForm(request.POST)
+            if form.is_valid():
+                note = form.save(commit=False)
+                note.record = record
+                note.user = request.user
+                note.save()
+                messages.success(request, 'Note added successfully!', extra_tags='success')
+
+                # Use reverse to get the URL for 'customer_record' with the record.id as an argument
+                return redirect(reverse('customer_record', kwargs={'pk': record.id}))
+            else:
+                messages.error(request, 'Note could not be added. Please check the form.', extra_tags='danger')
+        else:
+            form = RecordNoteForm()
+
+        return render(request, 'add_note.html', {'record': record, 'form': form})
+    else:
+        messages.success(request, "You must be logged in to add a note!", extra_tags='success')
+        return redirect('home')
+
+
 
 @allowed_user(allowed_roles=['Admin'])    
 def delete_record(request, pk):

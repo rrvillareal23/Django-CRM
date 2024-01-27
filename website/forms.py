@@ -1,7 +1,7 @@
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django import forms
-from .models import Record
+from .models import Record, RecordNote
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(label="", widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Email Address'}))
@@ -45,3 +45,11 @@ class AddRecordForm(forms.ModelForm):
         model = Record
         exclude = ("user",)
         
+
+class RecordNoteForm(forms.ModelForm):
+    class Meta:
+        model = RecordNote
+        fields = ['note']
+        widgets = {
+            'user': forms.HiddenInput(),
+        }

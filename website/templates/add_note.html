@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Add Note</h1>
+
+    <form method="post" action="{% url 'add_note' record.id %}">
+        {% csrf_token %}
+        {{ form.user }}
+        {{ form.note.label_tag }}
+        {{ form.note }}
+        <button type="submit" class="btn btn-success">Add Note</button>
+    </form>
+
+    <br>
+
+    <a href="{% url 'customer_record' record.id %}" class="btn btn-secondary">Back to Customer Record</a>
+{% endblock %}

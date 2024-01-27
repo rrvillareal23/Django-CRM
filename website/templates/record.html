@@ -24,11 +24,27 @@
         <div class="card-footer text-body-secondary">
           Created: {{ customer_record.created_at }}
         </div>
+        <br>
+        <h2>Notes:</h2>
+        {% if record_notes %}
+          <p>Number of notes: {{ record_notes|length }}</p>
+          {% for note in record_notes %}
+              <div class="card">
+                  <div class="card-body">
+                      <p class="card-text">{{ note.created_at }} - {{ note.user.username }}: {{ note.note }}</p>
+                  </div>
+              </div>
+          {% endfor %}
+      {% else %}
+          <p>No notes found for this record.</p>
+      {% endif %}
+
     </div>
       <br>
       <a href="{% url 'home' %}" class ="btn btn-secondary">Back</a>
       <a href="{% url 'delete_record' customer_record.id %}" class ="btn btn-danger">Delete</a>
       <a href="{% url 'update_record' customer_record.id %}" class ="btn btn-primary">Update Record</a>
+      <a href="{% url 'add_note' customer_record.id %}" class="btn btn-success">Add Note</a>
 
 
 {% endblock %}

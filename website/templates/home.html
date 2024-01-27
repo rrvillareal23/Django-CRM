@@ -4,27 +4,15 @@
 
 {% if user.is_authenticated %}
 
-    {% comment %} <div class="row">
-        {% for status, content in status_content_pairs %}
-            <div class="col-lg">
-                <div class="card card-body">
-                    <h5>{{ status }}</h5>
-                    <hr>
-                    {{ content }}
-                </div>
-            </div>
-        {% endfor %}
-    </div> {% endcomment %}
-
     <div class="row">
         <div class="col-md">
             <div class="card card-body">
                 <hr>
-                <canvas id="barChart" width="200" height="25"></canvas>
+                <canvas id="barChart" width="150" height="15"></canvas>
             </div>
         </div>
     </div>
-
+    
     <script>
         // Assuming status_content_pairs is a list of data objects
         var labels = [];
@@ -46,8 +34,8 @@
                 datasets: [{
                     data: data,
                     label: 'Legend Label', // Add a label if required (it won't be shown)
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)', // Blue color with alpha (transparency)
+                    borderColor: 'rgba(54, 162, 235, 1)', // Blue color without alpha
                     borderWidth: 1,
                 }]
             },
@@ -68,44 +56,47 @@
                 }
             }
         });
-
-
-
     </script>
-
-    <br>
 
     <div class="row-lg">
         <div class="col-lg">
             <div class="card card-body">
-                <table class="table">
-                    <thead class = "table-dark">
-                        <tr>
-                            <th><a href="?sort_by=first_name{% if sort_by == 'first_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Name</a></th>
-                            <th><a href="?sort_by=email{% if sort_by == 'email' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Email</a></th>
-                            <th><a href="?sort_by=phone{% if sort_by == 'phone' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Phone</a></th>
-                            <th><a href="?sort_by=project_status{% if sort_by == 'project_status' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Status</a></th>
-                            <th><a href="?sort_by=installer_name{% if sort_by == 'installer_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer</a></th>
-                            <th><a href="?sort_by=project_tier{% if sort_by == 'project_tier' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Tier</a></th>
-                            <th><a href="?sort_by=id{% if sort_by == 'id' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Project ID</a></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% if records %}
-                            {% for record in records %}
-                                <tr>
-                                    <td>{{ record.first_name }} {{ record.last_name }}</td>
-                                    <td>{{ record.email }}</td>
-                                    <td>{{ record.phone }}</td>
-                                    <td>{{ record.project_status }}</td>
-                                    <td>{{ record.installer_name }}</td>
-                                    <td>{{ record.project_tier }}</td>          
-                                    <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
-                                </tr>
-                            {% endfor %}
-                        {% endif %}
-                    </tbody>
-                </table>
+                <div style="overflow-y: auto; max-height: 700px;"> <!-- Adjust max-height as needed -->
+                    <table class="table">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>
+                                    <a href="?sort_by=first_name{% if sort_by == 'first_name' %}{% if sort_order == 'asc' %}&sort_order=desc{% else %}&sort_order=asc{% endif %}{% endif %}">
+                                        Name{% if sort_by == 'first_name' %}
+                                            {% if sort_order == 'asc' %}<i class="bi bi-arrow-up"></i>{% elif sort_order == 'desc' %}<i class="bi bi-arrow-down"></i>{% endif %}
+                                        {% endif %}
+                                    </a>
+                                </th>
+                                <th><a href="?sort_by=email{% if sort_by == 'email' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Email</a></th>
+                                <th><a href="?sort_by=phone{% if sort_by == 'phone' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Phone</a></th>
+                                <th><a href="?sort_by=project_status{% if sort_by == 'project_status' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Status</a></th>
+                                <th><a href="?sort_by=installer_name{% if sort_by == 'installer_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer</a></th>
+                                <th><a href="?sort_by=project_tier{% if sort_by == 'project_tier' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Tier</a></th>
+                                <th><a href="?sort_by=id{% if sort_by == 'id' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Project ID</a></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if records %}
+                                {% for record in records %}
+                                    <tr>
+                                        <td>{{ record.first_name }} {{ record.last_name }}</td>
+                                        <td>{{ record.email }}</td>
+                                        <td>{{ record.phone }}</td>
+                                        <td>{{ record.project_status }}</td>
+                                        <td>{{ record.installer_name }}</td>
+                                        <td>{{ record.project_tier }}</td>          
+                                        <td><a href="{% url 'customer_record' record.id %}">{{ record.id }}</a></td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
