@@ -5,7 +5,7 @@
 
     <div class="card text-center">
         <div class="card-header">
-            <h2>{{ customer_record.first_name }} {{ customer_record.last_name }} </h2>
+            <h1>{{ customer_record.first_name }} {{ customer_record.last_name }} </h1>
         </div>
         <div class="card-body">
           <h5 class="card-title">
@@ -17,6 +17,7 @@
               {{ customer_record.zipcode }} <br>
             <strong> Installer: </strong> {{ customer_record.installer_name }} <br>
             <strong> Status: </strong> {{ customer_record.project_status }} <br>
+            <strong> Tier: </strong> {{ customer_record.project_tier }} <br>
 
           </h5>
         </div>

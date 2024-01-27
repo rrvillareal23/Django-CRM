@@ -31,10 +31,16 @@
             
           {% endif %}
         </ul>
+        {% if  user.is_authenticated %}
+
         <form class="d-flex" role="search">
           <input class="form-control me-2" name="q" type="search" placeholder="Name or ProjectID" aria-label="Search" value="{{ search_query }}" size="35">
           <button class="btn btn-outline-primary my-2 my-sm-0" type="submit" >Search</button>
         </form>
-      </div>
+
+       {%endif%}
+
+
     </div>
-  </nav>
+  </div>
+</nav>

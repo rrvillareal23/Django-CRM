@@ -1,90 +1,133 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-    /* Add your custom styles here */
 
-    .row {
-        margin-bottom: 20px;
-    }
+{% if user.is_authenticated %}
 
-    .card {
-        border: 1px solid #ddd; /* Add a border for better separation */
-        border-radius: 8px; /* Optional: Add rounded corners */
-    }
+    {% comment %} <div class="row">
+        {% for status, content in status_content_pairs %}
+            <div class="col-lg">
+                <div class="card card-body">
+                    <h5>{{ status }}</h5>
+                    <hr>
+                    {{ content }}
+                </div>
+            </div>
+        {% endfor %}
+    </div> {% endcomment %}
 
-    .card-body {
-        padding: 15px;
-    }
-
-    table {
-        width: 100%;
-        margin-bottom: 20px;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
-
-    th {
-        background-color: #f2f2f2;
-    }
-
-    a {
-        text-decoration: none;
-        color: #007bff;
-    }
-</style>
-
-<div class="row">
-    {% for status, content in status_content_pairs %}
+    <div class="row">
         <div class="col-md">
             <div class="card card-body">
-                <h5>{{ status }}</h5>
                 <hr>
-                {{ content }}
+                <canvas id="barChart" width="200" height="25"></canvas>
             </div>
         </div>
-    {% endfor %}
-</div>
+    </div>
 
-<br>
+    <script>
+        // Assuming status_content_pairs is a list of data objects
+        var labels = [];
+        var data = [];
+    
+        {% for status, content in status_content_pairs %}
+            labels.push("{{ status }}");
+            data.push({{ content }});
+        {% endfor %}
+    
+        // Include the Chart.js Datalabels plugin
+        // You can include it from a CDN or install it using a package manager
 
-<div class="row">
-    <div class="col-md">
-        <div class="card card-body">
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th><a href="?sort_by=first_name{% if sort_by == 'first_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Name</a></th>
-                        <th><a href="?sort_by=email{% if sort_by == 'email' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Email</a></th>
-                        <th><a href="?sort_by=phone{% if sort_by == 'phone' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Phone</a></th>
-                        <th><a href="?sort_by=project_status{% if sort_by == 'project_status' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Status</a></th>
-                        <th><a href="?sort_by=installer_name{% if sort_by == 'installer_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer</a></th>
-                        <th><a href="?sort_by=project_tier{% if sort_by == 'project_tier' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Tier</a></th>
-                        <th><a href="?sort_by=id{% if sort_by == 'id' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Project ID</a></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% if records %}
-                        {% for record in records %}
-                            <tr>
-                                <td>{{ record.first_name }} {{ record.last_name }}</td>
-                                <td>{{ record.email }}</td>
-                                <td>{{ record.phone }}</td>
-                                <td>{{ record.project_status }}</td>
-                                <td>{{ record.installer_name }}</td>
-                                <td>{{ record.project_tier }}</td>          
-                                <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
-                            </tr>
-                        {% endfor %}
-                    {% endif %}
-                </tbody>
-            </table>
+        var ctx = document.getElementById('barChart').getContext('2d');
+        var barChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    data: data,
+                    label: 'Legend Label', // Add a label if required (it won't be shown)
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        display: false // Hide the entire y-axis
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false // Hide the legend
+                    }                
+                },
+                bar: {
+                    barPercentage: 1,
+                    categoryPercentage: 1
+                }
+            }
+        });
+
+
+
+    </script>
+
+    <br>
+
+    <div class="row-lg">
+        <div class="col-lg">
+            <div class="card card-body">
+                <table class="table">
+                    <thead class = "table-dark">
+                        <tr>
+                            <th><a href="?sort_by=first_name{% if sort_by == 'first_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Name</a></th>
+                            <th><a href="?sort_by=email{% if sort_by == 'email' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Email</a></th>
+                            <th><a href="?sort_by=phone{% if sort_by == 'phone' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Phone</a></th>
+                            <th><a href="?sort_by=project_status{% if sort_by == 'project_status' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Status</a></th>
+                            <th><a href="?sort_by=installer_name{% if sort_by == 'installer_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer</a></th>
+                            <th><a href="?sort_by=project_tier{% if sort_by == 'project_tier' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Tier</a></th>
+                            <th><a href="?sort_by=id{% if sort_by == 'id' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Project ID</a></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if records %}
+                            {% for record in records %}
+                                <tr>
+                                    <td>{{ record.first_name }} {{ record.last_name }}</td>
+                                    <td>{{ record.email }}</td>
+                                    <td>{{ record.phone }}</td>
+                                    <td>{{ record.project_status }}</td>
+                                    <td>{{ record.installer_name }}</td>
+                                    <td>{{ record.project_tier }}</td>          
+                                    <td><a href="{% url 'record' record.id %}">{{ record.id }}</a></td>
+                                </tr>
+                            {% endfor %}
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+
+    {% else %}
+    <div class = "col-md-6 offset-md-3">
+
+            <h1>Login</h1>
+            <br>
+            <form method="POST" action={% url 'home' %}>
+            {% csrf_token %}
+            
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="username" placeholder="Username" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" class="form-control" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Login</button>
+    
+            </form>
+        </div>
+  {% endif %}
+
 {% endblock %}
