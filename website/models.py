@@ -47,7 +47,7 @@ class RecordNote(models.Model):
     record = models.ForeignKey(Record, on_delete=models.CASCADE)
     note = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Added this line
     class Meta:
         ordering = ['-created_at']
     

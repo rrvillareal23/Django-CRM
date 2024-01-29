@@ -147,7 +147,7 @@ def add_note(request, pk):
             if form.is_valid():
                 note = form.save(commit=False)
                 note.record = record
-                note.user = request.user
+                note.user = request.user  # Set the user field
                 note.save()
                 messages.success(request, 'Note added successfully!', extra_tags='success')
 
@@ -162,6 +162,7 @@ def add_note(request, pk):
     else:
         messages.success(request, "You must be logged in to add a note!", extra_tags='success')
         return redirect('home')
+
 
 
 
