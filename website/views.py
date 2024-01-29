@@ -5,6 +5,8 @@ from .forms import SignUpForm, AddRecordForm, RecordNoteForm
 from .models import Record, Installer, RecordNote
 from .decorators import allowed_user
 from django.urls import reverse
+from django.forms.models import model_to_dict
+
 
 
 from django.db.models import Q
@@ -163,9 +165,6 @@ def add_note(request, pk):
         messages.success(request, "You must be logged in to add a note!", extra_tags='success')
         return redirect('home')
 
-
-
-
 @allowed_user(allowed_roles=['Admin'])    
 def delete_record(request, pk):
     if request.user.is_authenticated:
@@ -197,12 +196,36 @@ def update_record(request, pk):
     if request.user.is_authenticated:
         current_record = Record.objects.get(id=pk)
         form = AddRecordForm(request.POST or None, instance=current_record)
+        
         if form.is_valid():
-            form.save()
+            # Capture the original record data
+            original_data = model_to_dict(current_record)
+
+            # Save the updated record
+            updated_record = form.save()
+
+            # Capture the updated record data
+            updated_data = model_to_dict(updated_record)
+
+            # Compare the original and updated data to identify changes
+            updated_fields = []
+            for field_name, original_value in original_data.items():
+                updated_value = updated_data.get(field_name)
+                if original_value != updated_value:
+                    updated_fields.append(field_name)
+
+            # Create a RecordNote to track the updates
+            create_record_note(updated_record, updated_fields)
+
             messages.success(request, "Record Has Been Updated!", extra_tags='success')
             return redirect('home')
-        return render(request, 'update_record.html', {'form':form})
+
+        return render(request, 'update_record.html', {'form': form})
     else:
-        messages.success(request, "You must be logged in to Delete a Record!", extra_tags='warning')
+        messages.success(request, "You must be logged in to Update a Record!", extra_tags='warning')
         return redirect('home')
     
+def create_record_note(record, updated_fields):
+    if updated_fields:
+        note_text = f"Record updated. Updated fields: {', '.join(updated_fields)}"
+        RecordNote.objects.create(record=record, note=note_text)

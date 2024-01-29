@@ -36,9 +36,11 @@ class Record(models.Model):
     zipcode = models.CharField(max_length = 10)
     installer_name = models.CharField(max_length = 50, default = 'No Installer Yet')
     project_status = models.CharField(max_length = 50, choices=PROJECT_STATUS, default = 'Waiting on Survey')
-    project_tier = models.CharField(max_length = 50, choices=PROJECT_TIERS, default = '')
-    installer_price = models.IntegerField(default="-",null=True)
-    customer_price = models.IntegerField(default="-",null=True)
+    project_tier = models.CharField(max_length = 50, choices=PROJECT_TIERS, default = ' ')
+    installer_price = models.IntegerField(default=' ',null=True)
+    installer_permit = models.IntegerField(default=' ',null=True)
+    customer_permit = models.IntegerField(default=' ',null=True)
+    customer_price = models.IntegerField(default=' ',null=True)
     
     def __str__(self):
         return (f"{self.first_name} {self.last_name}")
