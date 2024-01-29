@@ -77,6 +77,8 @@
                                 <th><a href="?sort_by=project_status{% if sort_by == 'project_status' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Status</a></th>
                                 <th><a href="?sort_by=installer_name{% if sort_by == 'installer_name' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer</a></th>
                                 <th><a href="?sort_by=project_tier{% if sort_by == 'project_tier' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Tier</a></th>
+                                <th><a href="?sort_by=customer_price{% if sort_by == 'customer_price' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Customer Price</a></th>
+                                <th><a href="?sort_by=installer_price{% if sort_by == 'installer_price' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Installer Price</a></th>
                                 <th><a href="?sort_by=id{% if sort_by == 'id' and sort_order == 'asc' %}&sort_order=desc{% endif %}">Project ID</a></th>
                             </tr>
                         </thead>
@@ -89,7 +91,10 @@
                                         <td>{{ record.phone }}</td>
                                         <td>{{ record.project_status }}</td>
                                         <td>{{ record.installer_name }}</td>
-                                        <td>{{ record.project_tier }}</td>          
+                                        <td>{{ record.project_tier }}</td>
+                                        <td>${{ record.customer_price }}</td>          
+                                        <td>${{ record.installer_price }}</td>          
+          
                                         <td><a href="{% url 'customer_record' record.id %}">{{ record.id }}</a></td>
                                     </tr>
                                 {% endfor %}
