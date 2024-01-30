@@ -1,36 +1,38 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1> Customer Record: </h1>
+  <h1> Customer Record: </h1>
 
-    <div class="card text-center">
-        <div class="card-header">
-            <h1>{{ customer_record.first_name }} {{ customer_record.last_name }} </h1>
-        </div>
-        <div class="card-body">
-          <h5 class="card-title">
-            <strong> Email: </strong> {{ customer_record.email }} <br>
-            <strong> Phone: </strong> {{ customer_record.phone }} <br>
-            <strong> Address:</strong> {{ customer_record.address }}
-              {{ customer_record.city }}
-              {{ customer_record.state }}
-              {{ customer_record.zipcode }} <br>
-            <strong> Installer: </strong> {{ customer_record.installer_name }} <br>
-            <strong> Status: </strong> {{ customer_record.project_status }} <br>
-            <strong> Tier: </strong> {{ customer_record.project_tier }} <br>
-            <strong> Install Price: </strong> ${{ customer_record.customer_price }} <br>
-            <strong> Permit Price: </strong> ${{ customer_record.customer_permit }} <br>
-            <strong> Project: </strong> {{ customer_record.id }} <br>
-
-
-          </h5>
-        </div>
-        <div class="card-footer text-body-secondary">
+  <div class="card text-center">
+    <div class="card-header">
+      <h1>{{ customer_record.first_name }} {{ customer_record.last_name }} </h1>
+    </div>
+    <div class="card-body">
+      <h5 class="card-title">
+        <strong> Email: </strong> {{ customer_record.email }} <br>
+        <strong> Phone: </strong> {{ customer_record.phone }} <br>
+        <strong> Address:</strong> {{ customer_record.address }}
+          {{ customer_record.city }}
+          {{ customer_record.state }}
+          {{ customer_record.zipcode }} <br>
+        <strong> Installer: </strong> {{ customer_record.installer_name }} <br>
+        <strong> Status: </strong> {{ customer_record.project_status }} <br>
+        <strong> Tier: </strong> {{ customer_record.project_tier }} <br>
+        <strong> Install Price: </strong> ${{ customer_record.customer_price }} <br>
+        <strong> Permit Price: </strong> ${{ customer_record.customer_permit }} <br>
+        <strong> Project: </strong> {{ customer_record.id }} <br>
+      </h5>
+    </div>
+<!-- Notes Section -->
+<div class="row">
+  <div class="col-md-6">
+      <!-- Existing Notes Section -->
+      <div class="card-footer text-body-secondary">
           Created: {{ customer_record.created_at }}
-        </div>
-        <br>
-        <h2>Notes:</h2>
-        {% if record_notes %}
+      </div>
+      <br>
+      <h2>Notes:</h2>
+      {% if record_notes %}
           <p>Number of notes: {{ record_notes|length }}</p>
           {% for note in record_notes %}
               <div class="card">
@@ -42,13 +44,37 @@
       {% else %}
           <p>No notes found for this record.</p>
       {% endif %}
+  </div>
 
-    </div>
+  <div class="col-md-6">
+      <!-- New Project Updates Section -->
+      <div class="card-footer text-body-secondary">
+          Last Updated: {{ project_updates.0.updated_at|default:"N/A" }}
+      </div>
       <br>
-      <a href="{% url 'home' %}" class ="btn btn-secondary">Back</a>
-      <a href="{% url 'delete_record' customer_record.id %}" class ="btn btn-danger">Delete</a>
-      <a href="{% url 'update_record' customer_record.id %}" class ="btn btn-primary">Update Record</a>
-      <a href="{% url 'add_note' customer_record.id %}" class="btn btn-success">Add Note</a>
+      <h2>Project Updates:</h2>
+    {% if project_updates %}
+        <p>Number of updates: {{ project_updates|length }}</p>
+        {% for update in project_updates %}
+            <div class="card">
+                <div class="card-body">
+                    <p class="card-text">{{ update.updated_at }} - <strong>{{ update.user.username }}:</strong> {{ update.update_text }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No updates found for this record.</p>
+    {% endif %}
+</div>
+</div>
 
+    <br>
+
+  <center>
+    <a href="{% url 'home' %}" class ="btn btn-secondary">Back</a>
+    <a href="{% url 'delete_record' customer_record.id %}" class ="btn btn-danger">Delete</a>
+    <a href="{% url 'update_record' customer_record.id %}" class ="btn btn-primary">Update Record</a>
+    <a href="{% url 'add_note' customer_record.id %}" class="btn btn-success">Add Note</a>
+  </center>
 
 {% endblock %}

@@ -1,14 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import SignUpForm, AddRecordForm, RecordNoteForm
-from .models import Record, Installer, RecordNote
+from .forms import SignUpForm, AddRecordForm, RecordNoteForm, UpdateRecordForm
+from .models import Record, Installer, RecordNote, ProjectUpdate
 from .decorators import allowed_user
 from django.urls import reverse
 from django.forms.models import model_to_dict
-
-
-
 from django.db.models import Q
 
 
@@ -149,7 +146,7 @@ def add_note(request, pk):
             if form.is_valid():
                 note = form.save(commit=False)
                 note.record = record
-                note.user = request.user  # Set the user field
+                note.user = request.user  # Set the user field to the logged-in user
                 note.save()
                 messages.success(request, 'Note added successfully!', extra_tags='success')
 
@@ -164,6 +161,7 @@ def add_note(request, pk):
     else:
         messages.success(request, "You must be logged in to add a note!", extra_tags='success')
         return redirect('home')
+
 
 @allowed_user(allowed_roles=['Admin'])    
 def delete_record(request, pk):
@@ -196,7 +194,7 @@ def update_record(request, pk):
     if request.user.is_authenticated:
         current_record = Record.objects.get(id=pk)
         form = AddRecordForm(request.POST or None, instance=current_record)
-        
+
         if form.is_valid():
             # Capture the original record data
             original_data = model_to_dict(current_record)
@@ -215,7 +213,7 @@ def update_record(request, pk):
                     updated_fields.append(field_name)
 
             # Create a RecordNote to track the updates
-            create_record_note(updated_record, updated_fields)
+            create_record_note(updated_record, updated_fields, user=request.user)
 
             messages.success(request, "Record Has Been Updated!", extra_tags='success')
             return redirect('home')
@@ -224,8 +222,25 @@ def update_record(request, pk):
     else:
         messages.success(request, "You must be logged in to Update a Record!", extra_tags='warning')
         return redirect('home')
+
     
-def create_record_note(record, updated_fields):
+def create_record_note(record, updated_fields, user=None):
     if updated_fields:
         note_text = f"Record updated. Updated fields: {', '.join(updated_fields)}"
-        RecordNote.objects.create(record=record, note=note_text)
+        RecordNote.objects.create(record=record, note=note_text, user=user)
+
+def customer_record(request, pk):
+    if request.user.is_authenticated:
+        customer_record = get_object_or_404(Record, id=pk)
+        record_notes = RecordNote.objects.filter(record=customer_record)
+        project_updates = ProjectUpdate.objects.filter(record=customer_record).order_by('-updated_at')  # Order by latest update first
+        
+        return render(request, 'record.html', {
+            'customer_record': customer_record,
+            'record_notes': record_notes,
+            'project_updates': project_updates,
+        })
+    else:
+        messages.success(request, "You must be logged in to see that record!", extra_tags='success')
+        return redirect('home')
+

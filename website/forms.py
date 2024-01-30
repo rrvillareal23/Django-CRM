@@ -53,3 +53,8 @@ class RecordNoteForm(forms.ModelForm):
         widgets = {
             'user': forms.HiddenInput(),
         }
+
+class UpdateRecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        exclude = ['created_at']  # Exclude fields you don't want to update
