@@ -8,11 +8,6 @@ from django.urls import reverse
 from django.forms.models import model_to_dict
 from django.db.models import Q
 
-
-#login info     Employee Login        Insatller         Admin
-#admin          Tester                Trout             TestAdmin
-#password       testing123!           Zxcvbnm,./        Zxcvbnm,./
-
 def home(request):
     q = request.GET.get('q', '')
     installers = Installer.objects.all()
